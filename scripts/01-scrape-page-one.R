@@ -17,7 +17,7 @@ titles <- page %>%
   html_nodes(".iteminfo") %>%
   html_node("h3 a") %>%
   html_text() %>%
-  ___()
+  str_squish()
 
 # scrape links -----------------------------------------------------------------
 
@@ -25,7 +25,7 @@ links <- page %>%
   html_nodes(".iteminfo") %>%
   html_node("h3 a") %>%
   html_attr("href") %>%
-  str_replace("\\.", "___")
+  str_replace(".", "https://collections.ed.ac.uk")
 
 # scrape artists ---------------------------------------------------------------
 
