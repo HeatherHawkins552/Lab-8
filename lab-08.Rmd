@@ -1,8 +1,9 @@
 ---
 title: "Lab 08 - University of Edinburgh Art Collection"
-author: "Insert your name here"
-date: "Insert date here"
+author: "Heather Hawkins"
+date: "01-04-23"
 output: github_document
+
 ---
 
 ### Load packages and data
@@ -182,7 +183,7 @@ write_csv(uoe_art, file = "uoe-art.csv")
 
 ### Exercise 10
 
-```{r separate-title'n'date, error = TRUE}
+```{r separate-titleanddate, error = TRUE}
 uoe_art <- read_csv("uoe-art.csv")
 uoe_art <- uoe_art %>%
   separate(title, into = c("title", "date"), sep = "\\(") %>%
