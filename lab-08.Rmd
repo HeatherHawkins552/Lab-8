@@ -132,6 +132,7 @@ scrape_page <- function(url){
     html_nodes(".iteminfo") %>%   # same nodes
     html_node("h3 a") %>%         # as before
     html_attr("href") %>%         # but get href attribute instead of text
+    
     str_replace(pattern =".", replacement = "https://collections.ed.ac.uk") #replacing
   
   # scrape artists 
@@ -159,37 +160,80 @@ scrape_page(second_url)
 
 ### Exercise 7
 
+```{r list-urls}
+root <- "https://collections.ed.ac.uk/art/search/*:*/Collection:%22edinburgh+college+of+art%7C%7C%7CEdinburgh+College+of+Art%22?offset="
+numbers <- seq(from = 0, to = 3010, by = 10)
+urls <- glue("{root}{numbers}")
+```
+
 ### Exercise 8
+
+```{r dataframe}
+uoe_art <- map_dfr(urls, scrape_page)
+
+```
 
 ### Exercise 9
 
-```{r separate-title-date, error = TRUE}
-uoe_art <- uoe_art %>%
-  separate(title, into = c("title", "date"), sep = "\\(") %>%
-  mutate(year = str_remove(date, "\\)") %>% as.numeric()) %>%
-  select(title, artist, year, ___)
+```{r write---data frame}
+
+write_csv(uoe_art, file = "uoe-art.csv")
 ```
 
 ### Exercise 10
 
-Remove this text, and add your answer for Exercise 10 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+```{r separate-title'n'date, error = TRUE}
+uoe_art <- read_csv("uoe-art.csv")
+uoe_art <- uoe_art %>%
+  separate(title, into = c("title", "date"), sep = "\\(") %>%
+  mutate(year = str_remove(date, "\\)") %>% as.numeric()) %>%
+  select(title, name, year, link)
+```
+
+We have a warning bc some titles did not have the year in (). Bc of this, they are labeled as NA
 
 ### Exercise 11
 
+```{R skimming-like-swimming}
+skim(uoe_art)
+```
+115 have artist info missing and 1431 have year missing
+
 ### Exercise 12
+```{r}
+
+uoe_art %>%
+  ggplot(aes(x=year)) + geom_bar()
+
+uoe_art %>% filter(year <  50)
+```
 
 ### Exercise 13
 
+The Death Mask is labelled as the year "2", it was actually made in 1964....
+
+```{R fixxinngg}
+uoe_art<-uoe_art %>% mutate(year = if_else(year == 2, 1964, year))
+
+ggplot(data = uoe_art, aes(x = year)) + geom_bar(binwidth = 100)
+
+##YAY
+  
+```
+
+
 ### Exercise 14
+```{R ImTired}
+uoe_art %>% count(name) %>% arrange(desc(n)) %>% head(10)
+```
+The MOST commonly featured "artist" is "unknown"- meaning that many pieces do not have a name attached. the second in Emma Gilles- Idk why they have so much of her, I was guessing she was born/lived near there or something- and I was right!! (after googling of course)
 
 ### Exercise 15
-
-...
-
-{r load-data, message = FALSE, eval = FALSE}
-# Remove eval = FALSE or set it to TRUE once data is ready to be loaded
-uoe_art <- read_csv("data/uoe-art.csv")
-Add exercise headings as needed.
+```{r last}
+uoe_art %>% 
+  filter(
+    str_detect(title , "child") |
+      str_detect(title , "Child")
+  )
+```
+There are 11 art titles that contain the word child.
