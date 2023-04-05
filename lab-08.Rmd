@@ -168,18 +168,17 @@ urls <- glue("{root}{numbers}")
 ```
 
 ### Exercise 8
-
-```{r dataframe}
+]
 uoe_art <- map_dfr(urls, scrape_page)
 
-```
+]
 
 ### Exercise 9
 
-```{r write---data frame}
+--
 
 write_csv(uoe_art, file = "uoe-art.csv")
-```
+-
 
 ### Exercise 10
 
