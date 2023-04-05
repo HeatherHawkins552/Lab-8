@@ -36,12 +36,12 @@ artists <- page %>%
 
 # put together in a data frame -------------------------------------------------
 
-uoe_art <- tibble(
+first_ten <- tibble(
   title = titles,
   artist = artists,
   link = links)
 
-uoe_art
+first_ten
 
 
 # scrape second ten paintings --------------------------------------------------
